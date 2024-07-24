@@ -5,7 +5,7 @@
 BWA-mem2 Docker Container
 
 * [GitHub](https://github.com/informationsea/bwa-mem2-docker)
-* [DockerHub](https://hub.docker.com/r/informationsea/bwa-mem2)
+* [GitHub Packages]()
 
 ## Upstream Project
 
