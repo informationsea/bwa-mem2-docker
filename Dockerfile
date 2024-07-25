@@ -12,7 +12,7 @@ RUN tar --no-same-owner -xjf samtools-${SAMTOOLS_VERSION}.tar.bz2
 
 FROM debian:12 as build-samtools
 ARG SAMTOOLS_VERSION=1.20
-RUN apt-get update -y && apt-get install -y tar build-essential libncurses-dev libcurl4-openssl-dev liblzma-dev libbz2-dev zlib1g-dev
+RUN apt-get update && apt-get upgrade -y && apt-get install -y curl tar xz-utils bzip2 build-essential libssl-dev libcurl4-openssl-dev zlib1g-dev libbz2-dev liblzma-dev libncurses-dev
 COPY --from=download-samtools /samtools-${SAMTOOLS_VERSION} /samtools-${SAMTOOLS_VERSION}
 WORKDIR /samtools-${SAMTOOLS_VERSION}
 RUN ./configure
@@ -20,9 +20,10 @@ RUN make -j4
 RUN make install
 
 FROM debian:12-slim
-RUN apt-get update -y && apt-get install -y libncurses5 libcurl4 liblzma5 bzip2 zlib1g libdigest-perl-md5-perl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y curl tar xz-utils bzip2 libcurl4 libncursesw6 libssl3 zlib1g liblzma5 libbz2-1.0 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 ARG BWAMEM2_VERSION=2.2.1
 COPY --from=download-bwa /bwa-mem2-${BWAMEM2_VERSION}_x64-linux /opt/bwa-mem2-${BWAMEM2_VERSION}_x64-linux
 COPY --from=build-samtools /usr/local /usr/local
